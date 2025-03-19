@@ -4,11 +4,7 @@
  */
 package uts;
 import java.awt.event.KeyEvent;
-import java.sql.Connection; 
-import java.sql.DriverManager; 
-import java.sql.Statement;
-import java.sql.ResultSet; 
-import java.sql.SQLException; 
+import java.sql.*;
 import javax.swing.JOptionPane; 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -20,7 +16,7 @@ import javax.swing.table.TableColumn;
  */
 public class JFrameDosen extends javax.swing.JFrame {
     public DefaultTableModel model;  
-    String kd_dosen = "";
+    private int idProdi = -1;
 
     /**
      * Creates new form JFrameDosen
@@ -35,9 +31,10 @@ public class JFrameDosen extends javax.swing.JFrame {
        //memberi penamaan pada kolom Jtabel
         model=new DefaultTableModel();
         jTableDosen.setModel(model);
-        model.addColumn("Kode Dosen");
-        model.addColumn("Nama Dosen");
-        model.addColumn("Alamat");
+        model.addColumn("Kode Prodi");
+        model.addColumn("Nama Prodi");
+        model.addColumn("Ketua Prodi");
+        model.addColumn("Sekjur");
         model.addColumn("Date Modify");
         model.addColumn("Date Create"); 
         AturKolom();
@@ -53,10 +50,12 @@ public class JFrameDosen extends javax.swing.JFrame {
         kolom = jTableDosen.getColumnModel().getColumn(1); 
         kolom.setPreferredWidth(200);
         kolom = jTableDosen.getColumnModel().getColumn(2); 
-        kolom.setPreferredWidth(250);
+        kolom.setPreferredWidth(200);
         kolom = jTableDosen.getColumnModel().getColumn(3); 
-        kolom.setPreferredWidth(150);
+        kolom.setPreferredWidth(200);
         kolom = jTableDosen.getColumnModel().getColumn(4); 
+        kolom.setPreferredWidth(150);
+        kolom = jTableDosen.getColumnModel().getColumn(5); 
         kolom.setPreferredWidth(150);
     }
     
@@ -69,17 +68,18 @@ public class JFrameDosen extends javax.swing.JFrame {
             //membuat statemen pemanggilan data pada table jtbluser dari database
               Statement stat=(Statement)KoneksiDB.Getkoneksi().createStatement();
               
-              String sql="select *from tDosen";
+              String sql="select *from tProdi";
               ResultSet rs=stat.executeQuery(sql);
                //penelusuran baris pada tabel tuser dari database
              while (rs.next())
              {
-                 Object[] fieldx=new Object[5];
-                 fieldx[0]=rs.getString("kd_dosen");
-                 fieldx[1]=rs.getString("nama_dosen");         
-                 fieldx[2]=rs.getString("alamat");
-                 fieldx[3]=rs.getString("datecreate");
-                 fieldx[4]=rs.getString("datemodify");
+                 Object[] fieldx=new Object[6];
+                 fieldx[0]=rs.getString("kd_prodi");
+                 fieldx[1]=rs.getString("nama_prodi");         
+                 fieldx[2]=rs.getString("ketua_prodi");
+                 fieldx[3]=rs.getString("sekjur");
+                 fieldx[4]=rs.getString("datecreate");
+                 fieldx[5]=rs.getString("datemodify");
                  
                  model.addRow(fieldx);
               }             
@@ -88,10 +88,12 @@ public class JFrameDosen extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.getMessage() );   
         }
     }
-
-
-
-
+     
+    private void clearFields() {
+        txt_nama.setText("");
+        txt_ketua.setText("");
+        txt_sekjur.setText("");
+    }
 
 
     /**
@@ -110,9 +112,11 @@ public class JFrameDosen extends javax.swing.JFrame {
         btn_keluar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txt_nama = new javax.swing.JTextField();
-        txt_alamat = new javax.swing.JTextField();
+        txt_ketua = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txt_sekjur = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -142,6 +146,11 @@ public class JFrameDosen extends javax.swing.JFrame {
         });
 
         btn_hapus.setText("Hapus");
+        btn_hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapusActionPerformed(evt);
+            }
+        });
 
         btn_keluar.setText("Keluar");
         btn_keluar.addActionListener(new java.awt.event.ActionListener() {
@@ -150,7 +159,7 @@ public class JFrameDosen extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Form dosen");
+        jLabel1.setText("Form Prodi");
 
         txt_nama.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -158,15 +167,23 @@ public class JFrameDosen extends javax.swing.JFrame {
             }
         });
 
-        txt_alamat.addKeyListener(new java.awt.event.KeyAdapter() {
+        txt_ketua.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txt_alamatKeyPressed(evt);
+                txt_ketuaKeyPressed(evt);
             }
         });
 
-        jLabel2.setText("Nama Dosen");
+        jLabel2.setText("Nama Prodi");
 
-        jLabel3.setText("Alamat Dosen");
+        jLabel3.setText("Ketua Prodi");
+
+        jLabel4.setText("Sekjur");
+
+        txt_sekjur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_sekjurActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -175,28 +192,29 @@ public class JFrameDosen extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(btn_simpan)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btn_hapus)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btn_keluar))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(169, 169, 169)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(40, 40, 40)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
                         .addGap(58, 58, 58)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txt_nama)
-                            .addComponent(txt_alamat, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE))))
+                            .addComponent(txt_ketua, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                            .addComponent(txt_sekjur)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(btn_simpan)
+                                .addGap(18, 18, 18)
+                                .addComponent(btn_hapus)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btn_keluar))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -210,16 +228,21 @@ public class JFrameDosen extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_alamat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_ketua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addGap(47, 47, 47)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_simpan)
-                    .addComponent(btn_hapus)
+                    .addComponent(txt_sekjur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_simpan)
+                        .addComponent(btn_hapus))
                     .addComponent(btn_keluar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         pack();
@@ -233,56 +256,110 @@ public class JFrameDosen extends javax.swing.JFrame {
 
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
         // TODO add your handling code here:
-        if (!txt_nama.getText().isEmpty() || txt_alamat.getText().isEmpty()) 	
-        {
-                Statement StrU=(Statement)KoneksiDB.Getkoneksi().createStatement();  
-                Statement StrI=(Statement)KoneksiDB.Getkoneksi().createStatement();  
-                Statement Str=(Statement)KoneksiDB.Getkoneksi().createStatement();  
-            if(!kd_dosen.equals("")) {
-                                 //jika data sudah ada
-                StrU.executeUpdate("update trole set datemodify='"+CreateDate+"',nama_dosen='"+ txt_nama.getText() +"' where kd_dosen='"+ kd_dosen +"'" ); 
-                JOptionPane.showMessageDialog(null, "Data Sudah  Ubah","Update",JOptionPane.INFORMATION_MESSAGE);
-                jTextField_Role.requestFocus();
-                HeaderTable();
-                rool_id="";
-                jTextField_Role.setText("");
-                jTextField_Role.requestFocus();
+        String namaProdi = txt_nama.getText();
+        String ketuaProdi = txt_ketua.getText();
+        String sekjur = txt_sekjur.getText();
 
-            } else {
-                
-            }
-        }else{
-            //isi dengan CRUD Insert data dan update data
-            JOptionPane.showMessageDialog(null,"Role Name Belum Di Isi"); 
-           txt_nama.requestFocus(); 
+        if (namaProdi.isEmpty() || ketuaProdi.isEmpty() || sekjur.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Harap isi semua data!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
         }
 
+        String query;
+        if (idProdi == -1) {
+            // INSERT jika idProdi masih -1
+            query = "INSERT INTO tProdi (nama_prodi, ketua_prodi, sekjur, datecreate, datemodify) VALUES (?, ?, ?, NOW(), NOW())";
+        } else {
+            // UPDATE jika idProdi sudah ada
+            query = "UPDATE tProdi SET nama_prodi = ?, ketua_prodi = ?, sekjur = ?, datemodify = NOW() WHERE kd_prodi = ?";
+        }
+
+        try (Connection conn = KoneksiDB.Getkoneksi();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, namaProdi);
+            pstmt.setString(2, ketuaProdi);
+            pstmt.setString(3, sekjur);
+
+            if (idProdi != -1) {
+                pstmt.setInt(4, idProdi); 
+            }
+
+            pstmt.executeUpdate();
+            JOptionPane.showMessageDialog(this, idProdi == -1 ? "Data berhasil disimpan!" : "Data berhasil diperbarui!");
+
+            idProdi = -1; 
+            datatotabel();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal menyimpan data: " + e.getMessage());
+        }
     }//GEN-LAST:event_btn_simpanActionPerformed
 
     private void txt_namaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_namaKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode()==KeyEvent.VK_ENTER) 
             { // begin 
-                txt_alamat .requestFocus();   //panggil komponen yang akan di tuju 
+                txt_ketua .requestFocus();   //panggil komponen yang akan di tuju 
             }  //end if
 
     }//GEN-LAST:event_txt_namaKeyPressed
 
-    private void txt_alamatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_alamatKeyPressed
+    private void txt_ketuaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_ketuaKeyPressed
         // TODO add your handling code here:
                 if (evt.getKeyCode()==KeyEvent.VK_ENTER) 
             { // begin 
-                txt_alamat .requestFocus();   //panggil komponen yang akan di tuju 
+                txt_sekjur .requestFocus();   //panggil komponen yang akan di tuju 
             }  //end if
-    }//GEN-LAST:event_txt_alamatKeyPressed
+    }//GEN-LAST:event_txt_ketuaKeyPressed
 
     private void jTableDosenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDosenMouseClicked
         // TODO add your handling code here:
-        txt_nama.setText(model.getValueAt(jTableDosen.getSelectedRow(),1)+"");
-        txt_alamat.setText(model.getValueAt(jTableDosen.getSelectedRow(),2)+"");
+        int selectedRow = jTableDosen.getSelectedRow();
+        if (selectedRow != -1) {
+            try {
+                idProdi = Integer.parseInt(jTableDosen.getValueAt(selectedRow, 0).toString()); 
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Kode Prodi harus berupa angka!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-        kd_dosen=(model.getValueAt(jTableDosen.getSelectedRow(),0)+"");
+            txt_nama.setText(model.getValueAt(selectedRow, 1).toString());
+            txt_ketua.setText(model.getValueAt(selectedRow, 2).toString());
+            txt_sekjur.setText(model.getValueAt(selectedRow, 3).toString());
+        }
     }//GEN-LAST:event_jTableDosenMouseClicked
+
+    private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = jTableDosen.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data yang akan dihapus!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String kodeProdi = model.getValueAt(selectedRow, 0).toString();
+
+        int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            String query = "DELETE FROM tProdi WHERE kd_prodi = ?";
+
+            try (Connection conn = KoneksiDB.Getkoneksi();
+                 PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+                pstmt.setString(1, kodeProdi);
+                pstmt.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
+                datatotabel();
+                clearFields();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Gagal menghapus data: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btn_hapusActionPerformed
+
+    private void txt_sekjurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_sekjurActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_sekjurActionPerformed
 
     /**
      * @param args the command line arguments
@@ -326,9 +403,11 @@ public class JFrameDosen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableDosen;
-    private javax.swing.JTextField txt_alamat;
+    private javax.swing.JTextField txt_ketua;
     private javax.swing.JTextField txt_nama;
+    private javax.swing.JTextField txt_sekjur;
     // End of variables declaration//GEN-END:variables
 }
