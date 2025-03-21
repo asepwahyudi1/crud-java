@@ -16,7 +16,7 @@ import javax.swing.table.TableColumn;
  */
 public class JFrameDosen extends javax.swing.JFrame {
     public DefaultTableModel model;  
-    private int idProdi = -1;
+    private String idProdi = "";
 
     /**
      * Creates new form JFrameDosen
@@ -30,7 +30,7 @@ public class JFrameDosen extends javax.swing.JFrame {
     {
        //memberi penamaan pada kolom Jtabel
         model=new DefaultTableModel();
-        jTableDosen.setModel(model);
+        jTableProdi.setModel(model);
         model.addColumn("Kode Prodi");
         model.addColumn("Nama Prodi");
         model.addColumn("Ketua Prodi");
@@ -44,18 +44,18 @@ public class JFrameDosen extends javax.swing.JFrame {
     public void AturKolom()
     {
         TableColumn kolom;
-        jTableDosen.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF); 
-        kolom = jTableDosen.getColumnModel().getColumn(0); 
+        jTableProdi.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF); 
+        kolom = jTableProdi.getColumnModel().getColumn(0); 
         kolom.setPreferredWidth(100); 
-        kolom = jTableDosen.getColumnModel().getColumn(1); 
+        kolom = jTableProdi.getColumnModel().getColumn(1); 
         kolom.setPreferredWidth(200);
-        kolom = jTableDosen.getColumnModel().getColumn(2); 
+        kolom = jTableProdi.getColumnModel().getColumn(2); 
         kolom.setPreferredWidth(200);
-        kolom = jTableDosen.getColumnModel().getColumn(3); 
+        kolom = jTableProdi.getColumnModel().getColumn(3); 
         kolom.setPreferredWidth(200);
-        kolom = jTableDosen.getColumnModel().getColumn(4); 
+        kolom = jTableProdi.getColumnModel().getColumn(4); 
         kolom.setPreferredWidth(150);
-        kolom = jTableDosen.getColumnModel().getColumn(5); 
+        kolom = jTableProdi.getColumnModel().getColumn(5); 
         kolom.setPreferredWidth(150);
     }
     
@@ -90,6 +90,7 @@ public class JFrameDosen extends javax.swing.JFrame {
     }
      
     private void clearFields() {
+        txt_kdprodi.setText("");
         txt_nama.setText("");
         txt_ketua.setText("");
         txt_sekjur.setText("");
@@ -106,7 +107,7 @@ public class JFrameDosen extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableDosen = new javax.swing.JTable();
+        jTableProdi = new javax.swing.JTable();
         btn_simpan = new javax.swing.JButton();
         btn_hapus = new javax.swing.JButton();
         btn_keluar = new javax.swing.JButton();
@@ -117,10 +118,12 @@ public class JFrameDosen extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txt_sekjur = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        txt_kdprodi = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTableDosen.setModel(new javax.swing.table.DefaultTableModel(
+        jTableProdi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -131,12 +134,12 @@ public class JFrameDosen extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jTableDosen.addMouseListener(new java.awt.event.MouseAdapter() {
+        jTableProdi.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTableDosenMouseClicked(evt);
+                jTableProdiMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTableDosen);
+        jScrollPane1.setViewportView(jTableProdi);
 
         btn_simpan.setText("Simpan");
         btn_simpan.addActionListener(new java.awt.event.ActionListener() {
@@ -185,6 +188,19 @@ public class JFrameDosen extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setText("Kode Prodi");
+
+        txt_kdprodi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_kdprodiActionPerformed(evt);
+            }
+        });
+        txt_kdprodi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_kdprodiKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -195,16 +211,18 @@ public class JFrameDosen extends javax.swing.JFrame {
                         .addGap(169, 169, 169)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
+                        .addGap(59, 59, 59)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel4))
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
                         .addGap(58, 58, 58)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txt_nama)
-                            .addComponent(txt_ketua, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-                            .addComponent(txt_sekjur)))
+                            .addComponent(txt_ketua)
+                            .addComponent(txt_sekjur, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                            .addComponent(txt_kdprodi)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -222,7 +240,11 @@ public class JFrameDosen extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(13, 13, 13)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txt_kdprodi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
@@ -234,15 +256,14 @@ public class JFrameDosen extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_sekjur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_simpan)
-                        .addComponent(btn_hapus))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_simpan)
+                    .addComponent(btn_hapus)
                     .addComponent(btn_keluar))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addGap(72, 72, 72))
         );
 
         pack();
@@ -256,6 +277,7 @@ public class JFrameDosen extends javax.swing.JFrame {
 
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
         // TODO add your handling code here:
+        String kdProdi = txt_kdprodi.getText();
         String namaProdi = txt_nama.getText();
         String ketuaProdi = txt_ketua.getText();
         String sekjur = txt_sekjur.getText();
@@ -266,30 +288,35 @@ public class JFrameDosen extends javax.swing.JFrame {
         }
 
         String query;
-        if (idProdi == -1) {
-            // INSERT jika idProdi masih -1
-            query = "INSERT INTO tProdi (nama_prodi, ketua_prodi, sekjur, datecreate, datemodify) VALUES (?, ?, ?, NOW(), NOW())";
+        boolean isInsert = idProdi.isEmpty(); 
+
+        if (isInsert) {
+            query = "INSERT INTO tProdi (kd_prodi, nama_prodi, ketua_prodi, sekjur, datecreate, datemodify) VALUES (?, ?, ?, ?, NOW(), NOW())";
         } else {
-            // UPDATE jika idProdi sudah ada
             query = "UPDATE tProdi SET nama_prodi = ?, ketua_prodi = ?, sekjur = ?, datemodify = NOW() WHERE kd_prodi = ?";
         }
 
         try (Connection conn = KoneksiDB.Getkoneksi();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            pstmt.setString(1, namaProdi);
-            pstmt.setString(2, ketuaProdi);
-            pstmt.setString(3, sekjur);
-
-            if (idProdi != -1) {
-                pstmt.setInt(4, idProdi); 
+            if (isInsert) {
+                pstmt.setString(1, kdProdi);
+                pstmt.setString(2, namaProdi);
+                pstmt.setString(3, ketuaProdi);
+                pstmt.setString(4, sekjur);
+            } else {
+                pstmt.setString(1, namaProdi);
+                pstmt.setString(2, ketuaProdi);
+                pstmt.setString(3, sekjur);
+                pstmt.setString(4, idProdi);
             }
 
             pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, idProdi == -1 ? "Data berhasil disimpan!" : "Data berhasil diperbarui!");
+            JOptionPane.showMessageDialog(this, isInsert ? "Data berhasil disimpan!" : "Data berhasil diperbarui!");
 
-            idProdi = -1; 
+            idProdi = ""; 
             datatotabel();
+            clearFields();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Gagal menyimpan data: " + e.getMessage());
         }
@@ -312,32 +339,33 @@ public class JFrameDosen extends javax.swing.JFrame {
             }  //end if
     }//GEN-LAST:event_txt_ketuaKeyPressed
 
-    private void jTableDosenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDosenMouseClicked
+    private void jTableProdiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableProdiMouseClicked
         // TODO add your handling code here:
-        int selectedRow = jTableDosen.getSelectedRow();
+        int selectedRow = jTableProdi.getSelectedRow();
         if (selectedRow != -1) {
-            try {
-                idProdi = Integer.parseInt(jTableDosen.getValueAt(selectedRow, 0).toString()); 
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Kode Prodi harus berupa angka!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            idProdi = jTableProdi.getValueAt(selectedRow, 0).toString(); 
 
-            txt_nama.setText(model.getValueAt(selectedRow, 1).toString());
-            txt_ketua.setText(model.getValueAt(selectedRow, 2).toString());
-            txt_sekjur.setText(model.getValueAt(selectedRow, 3).toString());
+            txt_kdprodi.setText(jTableProdi.getValueAt(selectedRow, 0).toString());
+            txt_nama.setText(jTableProdi.getValueAt(selectedRow, 1).toString());
+            txt_ketua.setText(jTableProdi.getValueAt(selectedRow, 2).toString());
+            txt_sekjur.setText(jTableProdi.getValueAt(selectedRow, 3).toString());
         }
-    }//GEN-LAST:event_jTableDosenMouseClicked
+    }//GEN-LAST:event_jTableProdiMouseClicked
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         // TODO add your handling code here:
-        int selectedRow = jTableDosen.getSelectedRow();
+        int selectedRow = jTableProdi.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Pilih data yang akan dihapus!", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        String kodeProdi = model.getValueAt(selectedRow, 0).toString();
+        String kodeProdi = jTableProdi.getValueAt(selectedRow, 0).toString();
+
+        if (kodeProdi == null || kodeProdi.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Kode Prodi tidak valid!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
@@ -347,12 +375,17 @@ public class JFrameDosen extends javax.swing.JFrame {
                  PreparedStatement pstmt = conn.prepareStatement(query)) {
 
                 pstmt.setString(1, kodeProdi);
-                pstmt.executeUpdate();
-                JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
-                datatotabel();
-                clearFields();
+                int affectedRows = pstmt.executeUpdate();
+
+                if (affectedRows > 0) {
+                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
+                    datatotabel();
+                    clearFields();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Data tidak ditemukan atau gagal dihapus.", "Kesalahan", JOptionPane.ERROR_MESSAGE);
+                }
             } catch (SQLException e) {
-                JOptionPane.showMessageDialog(this, "Gagal menghapus data: " + e.getMessage());
+                JOptionPane.showMessageDialog(this, "Gagal menghapus data: " + e.getMessage(), "Kesalahan", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btn_hapusActionPerformed
@@ -360,6 +393,18 @@ public class JFrameDosen extends javax.swing.JFrame {
     private void txt_sekjurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_sekjurActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_sekjurActionPerformed
+
+    private void txt_kdprodiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_kdprodiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_kdprodiActionPerformed
+
+    private void txt_kdprodiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_kdprodiKeyPressed
+        // TODO add your handling code here:
+         if (evt.getKeyCode()==KeyEvent.VK_ENTER) 
+            { // begin 
+                txt_nama .requestFocus();   //panggil komponen yang akan di tuju 
+            }  //end if
+    }//GEN-LAST:event_txt_kdprodiKeyPressed
 
     /**
      * @param args the command line arguments
@@ -404,8 +449,10 @@ public class JFrameDosen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTableDosen;
+    private javax.swing.JTable jTableProdi;
+    private javax.swing.JTextField txt_kdprodi;
     private javax.swing.JTextField txt_ketua;
     private javax.swing.JTextField txt_nama;
     private javax.swing.JTextField txt_sekjur;
